@@ -15,6 +15,18 @@ DB_PASS=rhgs
 DB_NAME=rhgs
 DB_CONTAINER_NAME=rhgs-postgres
 
+PYTHONFILES=$(wildcard ./**/*.py)
+
+dist: $(PYTHONFILES) setup.py pyproject.toml
+	python -m build
+	@touch dist
+
+pypi: dist
+	python -m twine upload dist/*
+
+pypi-test: dist
+	python3 -m twine upload --verbose --repository testpypi dist/*
+
 help: ## Display this help
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
 

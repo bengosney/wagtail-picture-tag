@@ -1,0 +1,8 @@
+-c requirements.txt
+pre-commit
+pip-tools
+setuptools
+black
+flit
+twine
+build
