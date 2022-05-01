@@ -27,7 +27,7 @@ Quick start
 
     INSTALLED_APPS = [
         ...
-        'wagtail-picture-tag',
+        'wagtail_picture_tag',
     ]
 
 3. Include the tag in your template::
