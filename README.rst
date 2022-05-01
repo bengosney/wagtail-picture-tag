@@ -32,11 +32,11 @@ Quick start
 
 3. Include the tag in your template::
 
-    {% load wagtail_picture_tags %}
+    {% load picture_tags %}
 
 4. Use the tag::
 
-    {% wagtail_picture_tag image photo fill-640x480 fill-320x240 %}
+    {% picture image photo fill-640x480 fill-320x240 %}
 
 
 AVIF support
