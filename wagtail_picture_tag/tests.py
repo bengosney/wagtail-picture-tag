@@ -29,7 +29,7 @@ class PictureTagTests(TestCase):
         
         for dir in ['images','original_images']:
             path = base / dir
-            [f.unlink for f in path.glob('*')]
+            [f.unlink() for f in path.glob('*')]
             Path.rmdir(path)
             
         super().tearDownClass()
