@@ -1,9 +1,12 @@
 # Standard Library
 import re
+from pathlib import Path
 
 # Django
 from django.template import Context, Template
 from django.test import TestCase
+from django.conf import settings
+
 
 # Wagtail
 from wagtail.images.models import Image
@@ -16,6 +19,21 @@ from .templatetags.picture_tags import get_attrs, get_media_query, get_type
 
 
 class PictureTagTests(TestCase):
+    @classmethod
+    def setUpClass(cls):
+        return super().setUpClass()
+    
+    @classmethod
+    def tearDownClass(cls):
+        base = (Path(settings.BASE_DIR) / '..').resolve()
+        
+        for dir in ['images','original_images']:
+            path = base / dir
+            [f.unlink for f in path.glob('*')]
+            Path.rmdir(path)
+            
+        super().tearDownClass()
+    
     def test_get_type(self):
         types = [
             (".jpg", "image/jpeg"),
@@ -76,10 +94,10 @@ class PictureTagTests(TestCase):
 
         if match is not None:
             expected = f"""<picture>
-        <source srcset="/media/images/mock_img{match[1] or ''}.{match[2]}.{spec}.format-avif.avif" type="image/avif" width="56" height="56" />
-        <source srcset="/media/images/mock_img{match[1] or ''}.{match[2]}.{spec}.format-webp.webp" type="image/webp" width="56" height="56" />
-        <source srcset="/media/images/mock_img{match[1] or ''}.{match[2]}.{spec}.format-jpeg.jpg" type="image/jpeg" width="56" height="56" />
-        <img src="/media/images/mock_img{match[1] or ''}.{match[2]}.{spec}.format-jpeg.jpg" width="56" height="56" alt="mock" />
+        <source srcset="/images/mock_img{match[1] or ''}.{match[2]}.{spec}.format-avif.avif" type="image/avif" width="56" height="56" />
+        <source srcset="/images/mock_img{match[1] or ''}.{match[2]}.{spec}.format-webp.webp" type="image/webp" width="56" height="56" />
+        <source srcset="/images/mock_img{match[1] or ''}.{match[2]}.{spec}.format-jpeg.jpg" type="image/jpeg" width="56" height="56" />
+        <img src="/images/mock_img{match[1] or ''}.{match[2]}.{spec}.format-jpeg.jpg" width="56" height="56" alt="mock" />
     </picture>"""  # noqa
 
             self.assertHTMLEqual(got, expected)
@@ -98,15 +116,16 @@ class PictureTagTests(TestCase):
         self.assertIsNotNone(match)
         if match is not None:
             expected = f"""<picture>
-        <source srcset="/media/images/mock_img{match[1] or ''}.{match[2]}.{spec}.format-avif.avif" type="image/avif" width="56" height="56" loading="lazy"/>
-        <source srcset="/media/images/mock_img{match[1] or ''}.{match[2]}.{spec}.format-webp.webp" type="image/webp" width="56" height="56" loading="lazy"/>
-        <source srcset="/media/images/mock_img{match[1] or ''}.{match[2]}.{spec}.format-jpeg.jpg" type="image/jpeg" width="56" height="56" loading="lazy"/>
-        <img src="/media/images/mock_img{match[1] or ''}.{match[2]}.{spec}.format-jpeg.jpg" width="56" height="56" alt="mock" loading="lazy"/>
+        <source srcset="/images/mock_img{match[1] or ''}.{match[2]}.{spec}.format-avif.avif" type="image/avif" width="56" height="56" loading="lazy"/>
+        <source srcset="/images/mock_img{match[1] or ''}.{match[2]}.{spec}.format-webp.webp" type="image/webp" width="56" height="56" loading="lazy"/>
+        <source srcset="/images/mock_img{match[1] or ''}.{match[2]}.{spec}.format-jpeg.jpg" type="image/jpeg" width="56" height="56" loading="lazy"/>
+        <img src="/images/mock_img{match[1] or ''}.{match[2]}.{spec}.format-jpeg.jpg" width="56" height="56" alt="mock" loading="lazy"/>
     </picture>"""  # noqa
 
             self.assertHTMLEqual(got, expected)
 
     def test_size_spec(self):
+        self.maxDiff = 2500
         height = 100
         width = 100
         specs = [f"fill-{width//2}x{height//2}", f"fill-{width}x{height}", f"fill-{width//3}x{height//3}"]
@@ -121,16 +140,16 @@ class PictureTagTests(TestCase):
         self.assertIsNotNone(match)
         if match is not None:
             expected = f"""<picture>
-<source media="(max-width: 33px)" srcset="/media/images/mock_img{match[1] or ''}.{match[2]}.{specs[2]}.format-webp.webp" type="image/webp" width="33" height="33" />
-<source media="(max-width: 33px)" srcset="/media/images/mock_img{match[1] or ''}.{match[2]}.{specs[2]}.format-avif.avif" type="image/avif" width="33" height="33" />
-<source media="(max-width: 33px)" srcset="/media/images/mock_img{match[1] or ''}.{match[2]}.{specs[2]}.format-jpeg.jpg" type="image/jpeg" width="33" height="33" />
-<source media="(max-width: 100px)" srcset="/media/images/mock_img{match[1] or ''}.{match[2]}.{specs[1]}.format-avif.avif" type="image/avif" width="56" height="56" />
-<source media="(max-width: 100px)" srcset="/media/images/mock_img{match[1] or ''}.{match[2]}.{specs[1]}.format-webp.webp" type="image/webp" width="56" height="56" />
-<source media="(max-width: 100px)" srcset="/media/images/mock_img{match[1] or ''}.{match[2]}.{specs[1]}.format-jpeg.jpg" type="image/jpeg" width="56" height="56" />
-<source srcset="/media/images/mock_img{match[1] or ''}.{match[2]}.{specs[0]}.format-avif.avif" type="image/avif" width="50" height="50" />
-<source srcset="/media/images/mock_img{match[1] or ''}.{match[2]}.{specs[0]}.format-webp.webp" type="image/webp" width="50" height="50" />
-<source srcset="/media/images/mock_img{match[1] or ''}.{match[2]}.{specs[0]}.format-jpeg.jpg" type="image/jpeg" width="50" height="50" />
-<img src="/media/images/mock_img{match[1] or ''}.{match[2]}.{specs[0]}.format-jpeg.jpg" width="50" height="50" alt="mock" />
+<source media="(max-width: 33px)" srcset="/images/mock_img{match[1] or ''}.{match[2]}.{specs[2]}.format-webp.webp" type="image/webp" width="33" height="33" />
+<source media="(max-width: 33px)" srcset="/images/mock_img{match[1] or ''}.{match[2]}.{specs[2]}.format-avif.avif" type="image/avif" width="33" height="33" />
+<source media="(max-width: 33px)" srcset="/images/mock_img{match[1] or ''}.{match[2]}.{specs[2]}.format-jpeg.jpg" type="image/jpeg" width="33" height="33" />
+<source media="(max-width: 100px)" srcset="/images/mock_img{match[1] or ''}.{match[2]}.{specs[1]}.format-avif.avif" type="image/avif" width="56" height="56" />
+<source media="(max-width: 100px)" srcset="/images/mock_img{match[1] or ''}.{match[2]}.{specs[1]}.format-webp.webp" type="image/webp" width="56" height="56" />
+<source media="(max-width: 100px)" srcset="/images/mock_img{match[1] or ''}.{match[2]}.{specs[1]}.format-jpeg.jpg" type="image/jpeg" width="56" height="56" />
+<source srcset="/images/mock_img{match[1] or ''}.{match[2]}.{specs[0]}.format-avif.avif" type="image/avif" width="50" height="50" />
+<source srcset="/images/mock_img{match[1] or ''}.{match[2]}.{specs[0]}.format-webp.webp" type="image/webp" width="50" height="50" />
+<source srcset="/images/mock_img{match[1] or ''}.{match[2]}.{specs[0]}.format-jpeg.jpg" type="image/jpeg" width="50" height="50" />
+<img src="/images/mock_img{match[1] or ''}.{match[2]}.{specs[0]}.format-jpeg.jpg" width="50" height="50" alt="mock" />
 </picture>
 """  # noqa
 
