@@ -38,6 +38,7 @@ def parse_spec(spec) -> tuple[str | None, int | None]:
 
 
 def get_media_query(spec, image) -> str:
+    """Get a media query for the given filter specification."""
     mediaquery = None
     op, size = parse_spec(spec)
 
