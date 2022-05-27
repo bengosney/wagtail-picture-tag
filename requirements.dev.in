@@ -1,6 +1,6 @@
 -c requirements.txt
 pre-commit
-pip-tools
+pip-tools>=6.6.2
 setuptools
 black
 flit
