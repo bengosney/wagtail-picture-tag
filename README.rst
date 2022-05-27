@@ -2,13 +2,13 @@
 Wagtail Picture Tag
 ===================
 
-Wagtail Picture Tag adds a picture template tag. 
-It takes a the same parameters as the Wagtail Image tag but it 
+Wagtail Picture Tag adds a picture template tag.
+It takes a the same parameters as the Wagtail Image tag but it
 can accept multiple size and format parameters.
 
 By default it will try and create JPEG, PNG, JPEG and AVIF (if available).
 There are also two formate shortcuts:
-    
+
 - photo - will create JPEG, WEBP and AVIF
 - transparent - will create WEBP, PNG and AVIF
 

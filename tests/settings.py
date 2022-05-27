@@ -1,6 +1,7 @@
+# Standard Library
 import os
 
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+BASE_DIR = os.path.dirname(__file__)
 
 INSTALLED_APPS = (
     "wagtail.contrib.settings",
@@ -19,16 +20,16 @@ INSTALLED_APPS = (
     "wagtail.core",
     "modelcluster",
     "taggit",
-    'django.contrib.admin',
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.sites',
-    'tests',
-    'wagtail_picture_tag',
+    "django.contrib.admin",
+    "django.contrib.auth",
+    "django.contrib.contenttypes",
+    "django.contrib.sessions",
+    "django.contrib.sites",
+    "tests",
+    "wagtail_picture_tag",
 )
 
-SECRET_KEY = 'foobar'
+SECRET_KEY = "foobar"
 
 DATABASES = {
     "default": {
@@ -40,8 +41,7 @@ DATABASES = {
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [
-        ],
+        "DIRS": [],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [

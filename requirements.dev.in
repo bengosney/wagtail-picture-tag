@@ -1,12 +1,12 @@
 -c requirements.txt
-pre-commit
-pip-tools>=6.6.2
-setuptools
 black
-flit
-twine
 build
+flit
+model_bakery
+pip-tools>=6.6.2
+pre-commit
 pytest
 pytest-django
-model_bakery
+setuptools
+twine
 willowavif
