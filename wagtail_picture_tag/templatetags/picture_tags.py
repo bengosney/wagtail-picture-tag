@@ -63,7 +63,7 @@ def get_avif_rendition(image: AbstractImage, image_rendition: AbstractRendition,
         avifRendition = image.get_rendition(avifSpec)
     except InvalidFilterSpecError:
         try:
-            avifRendition = image.renditions.get(
+            avifRendition = image.renditions.get(  # type: ignore
                 filter_spec=avifSpec,
                 focal_point_key=cache_key,
             )
@@ -78,7 +78,7 @@ def get_avif_rendition(image: AbstractImage, image_rendition: AbstractRendition,
             output_filename_without_extension = input_filename_without_extension[: (59 - len(output_extension))]
             output_filename = f"{output_filename_without_extension}.{output_extension}"
 
-            avifRendition, _ = image.renditions.get_or_create(
+            avifRendition, _ = image.renditions.get_or_create(  # type: ignore
                 filter_spec=avifSpec, focal_point_key=cache_key, defaults={"file": File(avifImage.f, name=output_filename)}
             )
     return avifRendition
