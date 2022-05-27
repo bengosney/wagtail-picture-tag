@@ -18,11 +18,7 @@ from model_bakery import baker
 from .templatetags.picture_tags import get_attrs, get_media_query, get_type
 
 
-class PictureTagTests(TestCase):
-    @classmethod
-    def setUpClass(cls):
-        return super().setUpClass()
-    
+class PictureTagTests(TestCase):   
     @classmethod
     def tearDownClass(cls):
         base = (Path(settings.BASE_DIR) / '..').resolve()
