@@ -51,3 +51,7 @@ pre-init:
 init: .envrc pre-init install $(HOOKS) ## Initalise a dev enviroment
 	@which direnv > /dev/null || echo "direnv not found but recommended"
 	@echo "Read to dev"
+
+clean:
+	@echo "Cleaning up"
+	@rm -rf *.egg-info images original_images

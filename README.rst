@@ -44,3 +44,14 @@ AVIF support
 
 All that is needed is to install the `willowavif` package, it is
 then automatically imported and used.
+
+
+Testing
+-------
+
+Testing is done with pytest. Install and test can be done with::
+
+    pip install -r requirements.txt -r requirements.dev.txt
+    pytest
+
+"""
