@@ -6,3 +6,7 @@ black
 flit
 twine
 build
+pytest
+pytest-django
+model_bakery
+willowavif
