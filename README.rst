@@ -48,7 +48,9 @@ then automatically imported and used.
 
 Testing
 -------
-
+.. image:: https://circleci.com/gh/bengosney/wagtail-picture-tag/tree/main.svg?style=svg
+        :target: https://circleci.com/gh/bengosney/wagtail-picture-tag/tree/main
+        
 Testing is done with pytest. Install and test can be done with::
 
     pip install -r requirements.txt -r requirements.dev.txt
