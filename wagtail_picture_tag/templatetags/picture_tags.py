@@ -25,18 +25,22 @@ register = template.Library()
 spec_regex = re.compile(r"^(?P<op>\w+)((-(?P<size>\d+))(x(\d+))?)?$")
 
 
-def parse_spec(spec):
+def parse_spec(spec) -> tuple[str | None, int | None]:
     """Parse a filter specification."""
     if not (match := spec_regex.match(spec)):
         return None, None
     groups = match.groupdict()
 
-    return groups["op"], groups["size"] or None
+    try:
+        return f"{groups['op']}", int(groups["size"])
+    except (ValueError, TypeError):
+        return f"{groups['op']}", None
 
 
-def get_media_query(spec, image):
-    mediaquery = ""
+def get_media_query(spec, image) -> str:
+    mediaquery = None
     op, size = parse_spec(spec)
+    print(spec, op, size)
 
     if op in ["fill", "width"]:
         mediaquery = f"max-width: {size}px"
@@ -44,6 +48,9 @@ def get_media_query(spec, image):
         mediaquery = f"max-width: {image.width}px"
     elif op in ["min"]:
         mediaquery = f"min-width: {size}px"
+
+    if mediaquery is None:
+        return ""
 
     return f"({mediaquery})"
 
@@ -183,8 +190,7 @@ class PictureNode(template.Node):
         base = None
 
         srcsets = []
-
-        sizedSpecs.sort(key=lambda spec: parse_spec(spec)[1], reverse=True)
+        sizedSpecs.sort(key=lambda spec: parse_spec(spec)[1])
         for spec in sizedSpecs:
             renditions = get_renditions(image, spec, self.formats)
             for rendition in renditions:

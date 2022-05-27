@@ -1,8 +1,10 @@
 -c requirements.txt
 black
 build
+django-stubs
 flit
 model_bakery
+mypy
 pip-tools>=6.6.2
 pre-commit
 pytest
