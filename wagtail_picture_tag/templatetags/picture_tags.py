@@ -40,19 +40,15 @@ def parse_spec(spec) -> tuple[str | None, int | None]:
 def get_media_query(spec, image) -> str:
     mediaquery = None
     op, size = parse_spec(spec)
-    print(spec, op, size)
 
     if op in ["fill", "width"]:
-        mediaquery = f"max-width: {size}px"
+        mediaquery = f"(max-width: {size}px)"
     elif op in ["max", "height", "scale", "original"]:
-        mediaquery = f"max-width: {image.width}px"
+        mediaquery = f"(max-width: {image.width}px)"
     elif op in ["min"]:
-        mediaquery = f"min-width: {size}px"
+        mediaquery = f"(min-width: {size}px)"
 
-    if mediaquery is None:
-        return ""
-
-    return f"({mediaquery})"
+    return mediaquery or ""
 
 
 def get_avif_rendition(image, imageRendition, filter_spec):
