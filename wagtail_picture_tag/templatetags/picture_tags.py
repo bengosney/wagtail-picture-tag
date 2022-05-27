@@ -25,7 +25,7 @@ register = template.Library()
 spec_regex = re.compile(r"^(?P<op>\w+)((-(?P<size>\d+))(x(\d+))?)?$")
 
 
-def parse_spec(spec) -> tuple[str | None, int | None]:
+def parse_spec(spec: str) -> tuple[str | None, int | None]:
     """Parse a filter specification."""
     if not (match := spec_regex.match(spec)):
         return None, None
@@ -37,7 +37,7 @@ def parse_spec(spec) -> tuple[str | None, int | None]:
         return f"{groups['op']}", None
 
 
-def get_media_query(spec, image) -> str:
+def get_media_query(spec: str, image: Rendition) -> str:
     """Get a media query for the given filter specification."""
     mediaquery = None
     op, size = parse_spec(spec)
