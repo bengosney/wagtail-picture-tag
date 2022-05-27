@@ -53,5 +53,3 @@ Testing is done with pytest. Install and test can be done with::
 
     pip install -r requirements.txt -r requirements.dev.txt
     pytest
-
-"""
