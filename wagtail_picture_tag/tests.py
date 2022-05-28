@@ -1,6 +1,7 @@
 # Standard Library
 import re
 from pathlib import Path
+from typing import cast
 
 # Django
 from django.conf import settings
@@ -8,13 +9,13 @@ from django.template import Context, Template
 from django.test import TestCase
 
 # Wagtail
-from wagtail.images.models import Image
+from wagtail.images.models import AbstractRendition, Image
 
 # Third Party
-from model_bakery import baker
+from model_bakery.recipe import Recipe
 
 # Locals
-from .templatetags.picture_tags import get_attrs, get_media_query, get_type
+from .templatetags.picture_tags import AttrsType, get_attrs, get_media_query, get_type
 
 
 class PictureTagTests(TestCase):
@@ -24,10 +25,18 @@ class PictureTagTests(TestCase):
 
         for dir in ["images", "original_images"]:
             path = base / dir
-            [f.unlink() for f in path.glob("*")]
+            for f in path.glob("*"):
+                f.unlink()
             Path.rmdir(path)
 
         super().tearDownClass()
+
+    def setUp(self) -> None:
+        self.width: int = 100
+        self.height: int = 100
+        self.image_recipe: Recipe[Image] = Recipe(Image, title="mock", width=self.width, height=self.height, _create_files=True)
+
+        return super().setUp()
 
     def test_get_type(self):
         types = [
@@ -41,7 +50,7 @@ class PictureTagTests(TestCase):
             self.assertEqual(get_type(ext), type)
 
     def test_get_attrs(self):
-        pairs = [
+        pairs: list[tuple[AttrsType, str]] = [
             ({"width": 100, "height": 100, "loading": "lazy"}, 'width="100" height="100" loading="lazy"'),
             ({"width": 100, "height": 100, "loading": "eager"}, 'width="100" height="100"'),
         ]
@@ -59,7 +68,7 @@ class PictureTagTests(TestCase):
 
     def test_spec_parse(self):
         class fakeImage:
-            width = 100
+            width = self.width
 
         specs = (
             ("max-1000x500", "(max-width: 100px)"),
@@ -72,14 +81,15 @@ class PictureTagTests(TestCase):
         )
 
         for spec, expected in specs:
-            self.assertEqual(get_media_query(spec, fakeImage()), expected)
+            self.assertEqual(get_media_query(spec, cast(AbstractRendition, fakeImage())), expected)
+
+    def bake_image(self, **kwargs) -> Image:
+        return self.image_recipe.make(_create_files=True, **kwargs)
 
     def test_basic_spec(self):
-        height = 100
-        width = 100
-        spec = f"fill-{width}x{height}"
+        spec = f"fill-{self.width}x{self.height}"
 
-        image = baker.make(Image, title="mock", height=height, width=width, _create_files=True)
+        image = self.bake_image()
         context = Context({"image": image})
         template = Template(f"{{% load picture_tags %}}{{% picture image {spec} photo %}}")
 
@@ -98,11 +108,9 @@ class PictureTagTests(TestCase):
             self.assertHTMLEqual(got, expected)
 
     def test_lazy_spec(self):
-        height = 100
-        width = 100
-        spec = f"fill-{width}x{height}"
+        spec = f"fill-{self.width}x{self.height}"
 
-        image = baker.make(Image, title="mock", height=height, width=width, _create_files=True)
+        image = self.bake_image()
         context = Context({"image": image})
         template = Template(f"{{% load picture_tags %}}{{% picture image {spec} photo lazy %}}")
 
@@ -120,13 +128,14 @@ class PictureTagTests(TestCase):
             self.assertHTMLEqual(got, expected)
 
     def test_size_spec(self):
-        self.maxDiff = 2500
-        height = 100
-        width = 100
-        specs = [f"fill-{width//2}x{height//2}", f"fill-{width}x{height}", f"fill-{width//3}x{height//3}"]
+        specs = [
+            f"fill-{self.width//2}x{self.height//2}",
+            f"fill-{self.width}x{self.height}",
+            f"fill-{self.width//3}x{self.height//3}",
+        ]
         spec = " ".join(specs)
 
-        image = baker.make(Image, title="mock", height=height, width=width, _create_files=True)
+        image = self.bake_image()
         context = Context({"image": image})
         template = Template(f"{{% load picture_tags %}}{{% picture image {spec} photo %}}")
 
