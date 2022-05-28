@@ -7,7 +7,7 @@ REQS=$(subst in,txt,$(INS))
 
 PYTHONFILES=$(wildcard ./**/*.py)
 
-dist: $(PYTHONFILES) setup.py pyproject.toml
+dist: $(PYTHONFILES) setup.cfg pyproject.toml
 	python -m build
 	@touch dist
 
@@ -49,3 +49,4 @@ init: .envrc pre-init install $(HOOKS) ## Initalise a dev enviroment
 clean:
 	@echo "Cleaning up"
 	@rm -rf *.egg-info images original_images
+	@rm -rf dist build
