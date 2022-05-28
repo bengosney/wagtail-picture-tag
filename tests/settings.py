@@ -29,6 +29,7 @@ INSTALLED_APPS = (
     "wagtail_picture_tag",
 )
 
+USE_TZ = True
 SECRET_KEY = "foobar"
 
 DATABASES = {

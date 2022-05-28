@@ -4,6 +4,7 @@ import hashlib
 import os
 import re
 from io import BytesIO
+from typing import Mapping
 
 # Django
 from django import template
@@ -21,6 +22,7 @@ with contextlib.suppress(ImportError):
     # Third Party
     import willowavif  # noqa
 
+AttrsType = Mapping[str, object]
 
 register = template.Library()
 
@@ -63,7 +65,7 @@ def get_avif_rendition(image: AbstractImage, image_rendition: AbstractRendition,
         avifRendition = image.get_rendition(avifSpec)
     except InvalidFilterSpecError:
         try:
-            avifRendition = image.renditions.get(  # type: ignore
+            avifRendition = image.renditions.get(
                 filter_spec=avifSpec,
                 focal_point_key=cache_key,
             )
@@ -78,7 +80,7 @@ def get_avif_rendition(image: AbstractImage, image_rendition: AbstractRendition,
             output_filename_without_extension = input_filename_without_extension[: (59 - len(output_extension))]
             output_filename = f"{output_filename_without_extension}.{output_extension}"
 
-            avifRendition, _ = image.renditions.get_or_create(  # type: ignore
+            avifRendition, _ = image.renditions.get_or_create(
                 filter_spec=avifSpec, focal_point_key=cache_key, defaults={"file": File(avifImage.f, name=output_filename)}
             )
     return avifRendition
@@ -132,7 +134,7 @@ def picture(parser, token):
     return PictureNode(image_expr, filter_specs, list(set(formats)), loading)
 
 
-def get_attrs(attrs: dict[str, str]) -> str:
+def get_attrs(attrs: AttrsType) -> str:
     return " ".join(f'{k}="{v}"' for k, v in attrs.items() if v != "eager" or k != "loading")
 
 
