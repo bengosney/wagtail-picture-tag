@@ -3,11 +3,18 @@ Wagtail Picture Tag
 ===================
 
 Wagtail Picture Tag adds a picture template tag.
+This is not supposed to be a solution for all situations but to be 
+a shortcut most.
+
 It takes a the same parameters as the Wagtail Image tag but it
 can accept multiple size and format parameters.
+When multiple sizes are given media queries are automaticly generated to match.
+Multiple formats are sorted by file size.
+
+It also takes the argument `lazy` that simply adds `loading="lazy" to the HTML tag.
 
 By default it will try and create JPEG, PNG, JPEG and AVIF (if available).
-There are also two formate shortcuts:
+There are also two format shortcuts:
 
 - photo - will create JPEG, WEBP and AVIF
 - transparent - will create WEBP, PNG and AVIF
