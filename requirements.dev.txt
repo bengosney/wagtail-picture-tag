@@ -217,9 +217,9 @@ keyring==23.5.0 \
     --hash=sha256:9012508e141a80bd1c0b6778d5c610dd9f8c464d75ac6774248500503f972fb9 \
     --hash=sha256:b0d28928ac3ec8e42ef4cc227822647a19f1d544f21f96457965dc01cf555261
     # via twine
-model-bakery==1.5.0 \
-    --hash=sha256:e4e09e1c536e3b7d5e7a827d4d1ccd4540dea56062d766b506d86067d3a94dea \
-    --hash=sha256:ed533de56df7af4f08f786f82532802f994e2ef01d8366ec4fe6d588585d8ac7
+model-bakery==1.9.0 \
+    --hash=sha256:93ac818df49377d4f14316105028fa95231474bf268d6017e420e5d4b74d54fd \
+    --hash=sha256:99571801a26b85b8dcba7f0ad39750aeb2f2477fe770d2291823e16788785000
     # via -r requirements.dev.in
 mypy==0.950 \
     --hash=sha256:0112752a6ff07230f9ec2f71b0d3d4e088a910fdce454fdb6553e83ed0eced7d \
@@ -495,11 +495,9 @@ tomli==2.0.1 \
     --hash=sha256:939de3e7a6161af0c887ef91b7d41a53e7c5a1ca976325f429cb46ea9bc30ecc \
     --hash=sha256:de526c12914f0c550d15924c62d72abc48d6fe7364aa87328337a31007fe8a4f
     # via
-    #   black
     #   build
     #   django-stubs
     #   flit
-    #   mypy
     #   pep517
     #   pytest
 tomli-w==1.0.0 \
