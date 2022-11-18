@@ -1,0 +1,10 @@
+version: 2
+updates:
+  - package-ecosystem: pip
+    directory: "/"
+    schedule:
+      interval: daily
+      time: "20:00"
+      timezone: GMT
+    open-pull-requests-limit: 50
+    target-branch: main
