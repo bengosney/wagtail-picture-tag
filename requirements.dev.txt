@@ -44,7 +44,9 @@ bleach==5.0.0 \
 build==0.7.0 \
     --hash=sha256:1aaadcd69338252ade4f7ec1265e1a19184bf916d84c9b7df095f423948cb89f \
     --hash=sha256:21b7ebbd1b22499c4dac536abc7606696ea4d909fd755e00f09f3c0f2c05e3c8
-    # via -r requirements.dev.in
+    # via
+    #   -r requirements.dev.in
+    #   pip-tools
 certifi==2022.5.18.1 \
     --hash=sha256:9c5705e395cd70084351dd8ad5c41e65655e08ce46f2ec9cf6c2c08390f71eb7 \
     --hash=sha256:f1d53542ee8cbedbe2118b5686372fb33c297fcd6379b050cca0ef13a597382a
@@ -273,9 +275,7 @@ pathspec==0.9.0 \
 pep517==0.12.0 \
     --hash=sha256:931378d93d11b298cf511dd634cf5ea4cb249a28ef84160b3247ee9afb4e8ab0 \
     --hash=sha256:dd884c326898e2c6e11f9e0b64940606a93eb10ea022a2e067959f3a110cf161
-    # via
-    #   build
-    #   pip-tools
+    # via build
 pillow==9.1.1 \
     --hash=sha256:088df396b047477dd1bbc7de6e22f58400dae2f21310d9e2ec2933b2ef7dfa4f \
     --hash=sha256:09e67ef6e430f90caa093528bd758b0616f8165e57ed8d8ce014ae32df6a831d \
@@ -363,9 +363,9 @@ pillow-avif-plugin==1.2.2 \
     --hash=sha256:fc542b03ea87f0e832904fe1ff61cb586bafcd5f80e352ae7ca5cac008e9d651 \
     --hash=sha256:feba13f19bd9381e079e72f088a66a6509caefb52304888751d637c23b1faa00
     # via willowavif
-pip-tools==6.6.2 \
-    --hash=sha256:6b486548e5a139e30e4c4a225b3b7c2d46942a9f6d1a91143c21b1de4d02fd9b \
-    --hash=sha256:f638503a9f77d98d9a7d72584b1508d3f82ed019b8fab24f4e5ad078c1b8c95e
+pip-tools==6.10.0 \
+    --hash=sha256:57ac98392548f5ca96c2831927deec3035efe81ff476e3c744bd474ca9c6a1f2 \
+    --hash=sha256:7f9f7356052db6942b5aaabc8eba29983591ca0ad75affbf2f0a25d9361be624
     # via -r requirements.dev.in
 pkginfo==1.8.2 \
     --hash=sha256:542e0d0b6750e2e21c20179803e40ab50598d8066d51097a0e382cba9eb02bff \
