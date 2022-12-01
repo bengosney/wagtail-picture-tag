@@ -370,9 +370,9 @@ pillow-avif-plugin==1.2.2 \
     --hash=sha256:fc542b03ea87f0e832904fe1ff61cb586bafcd5f80e352ae7ca5cac008e9d651 \
     --hash=sha256:feba13f19bd9381e079e72f088a66a6509caefb52304888751d637c23b1faa00
     # via willowavif
-pip-tools==6.10.0 \
-    --hash=sha256:57ac98392548f5ca96c2831927deec3035efe81ff476e3c744bd474ca9c6a1f2 \
-    --hash=sha256:7f9f7356052db6942b5aaabc8eba29983591ca0ad75affbf2f0a25d9361be624
+pip-tools==6.11.0 \
+    --hash=sha256:64a6b66887c270705a9006a10023eb4c893e9bf66c306bdcb4440541b367c057 \
+    --hash=sha256:90c5dc150e3856e4463b81ccc99307ccf9554e5db8393eb273705cb0b8f71c60
     # via -r requirements.dev.in
 pkginfo==1.8.2 \
     --hash=sha256:542e0d0b6750e2e21c20179803e40ab50598d8066d51097a0e382cba9eb02bff \
