@@ -103,7 +103,8 @@ def get_renditions(image: AbstractImage, filter_spec: str, formats: list[str]) -
         with contextlib.suppress(AttributeError):
             renditions.append(get_avif_rendition(image, renditions[0], filter_spec))
 
-    renditions.sort(key=lambda r: r.file.size)
+    with contextlib.suppress(FileNotFoundError):
+        renditions.sort(key=lambda r: r.file.size)
 
     return renditions
 
