@@ -7,14 +7,17 @@ REQS=$(subst in,txt,$(INS))
 
 PYTHONFILES=$(wildcard ./**/*.py)
 
-dist: $(PYTHONFILES) setup.cfg pyproject.toml
+dist: $(PYTHONFILES) setup.cfg pyproject.toml README.rst
 	python -m build
 	@touch dist
 
-pypi: dist ## Deploy to the actual PyPI
+check: dist
+	python -m twine check $^/*
+
+pypi: dist check ## Deploy to the actual PyPI
 	python -m twine upload dist/*
 
-pypi-test: dist ## Deploy to the test PyPI
+pypi-test: dist check ## Deploy to the test PyPI
 	python -m twine upload --verbose --repository testpypi dist/*
 
 help: ## Display this help
