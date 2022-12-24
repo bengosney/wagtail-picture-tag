@@ -70,20 +70,29 @@ def get_avif_rendition(image: AbstractImage, image_rendition: AbstractRendition,
                 focal_point_key=cache_key,
             )
         except Rendition.DoesNotExist:
-            with image_rendition.get_willow_image() as willow:
-                avifImage = willow.save_as_avif(BytesIO())
-
-            input_filename_without_extension, _ = os.path.splitext(image.filename)
-            output_extension = avifSpec.replace("|", ".") + ".avif"
-            if cache_key:
-                output_extension = f"{cache_key}.{output_extension}"
-            output_filename_without_extension = input_filename_without_extension[: (59 - len(output_extension))]
-            output_filename = f"{output_filename_without_extension}.{output_extension}"
-
-            avifRendition, _ = image.renditions.get_or_create(
-                filter_spec=avifSpec, focal_point_key=cache_key, defaults={"file": File(avifImage.f, name=output_filename)}
+            avifRendition = _get_avif_renditions_fallback(
+                image_rendition, image, avifSpec, cache_key
             )
     return avifRendition
+
+
+def _get_avif_renditions_fallback(image_rendition, image, avifSpec, cache_key):
+    with image_rendition.get_willow_image() as willow:
+        avifImage = willow.save_as_avif(BytesIO())
+
+    input_filename_without_extension, _ = os.path.splitext(image.filename)
+    output_extension = avifSpec.replace("|", ".") + ".avif"
+    if cache_key:
+        output_extension = f"{cache_key}.{output_extension}"
+    output_filename_without_extension = input_filename_without_extension[: (59 - len(output_extension))]
+    output_filename = f"{output_filename_without_extension}.{output_extension}"
+
+    result, _ = image.renditions.get_or_create(
+        filter_spec=avifSpec,
+        focal_point_key=cache_key,
+        defaults={"file": File(avifImage.f, name=output_filename)},
+    )
+    return result
 
 
 def get_renditions(image: AbstractImage, filter_spec: str, formats: list[str]) -> list[AbstractRendition]:
@@ -103,7 +112,8 @@ def get_renditions(image: AbstractImage, filter_spec: str, formats: list[str]) -
         with contextlib.suppress(AttributeError):
             renditions.append(get_avif_rendition(image, renditions[0], filter_spec))
 
-    renditions.sort(key=lambda r: r.file.size)
+    with contextlib.suppress(FileNotFoundError):
+        renditions.sort(key=lambda r: r.file.size)
 
     return renditions
 
