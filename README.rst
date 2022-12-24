@@ -11,7 +11,7 @@ can accept multiple size and format parameters.
 When multiple sizes are given media queries are automaticly generated to match.
 Multiple formats are sorted by file size.
 
-It also takes the argument `lazy` that simply adds `loading="lazy" to the HTML tag.
+It also takes the argument `lazy` that simply adds `loading="lazy"` to the HTML tag.
 
 By default it will try and create JPEG, PNG, JPEG and AVIF (if available).
 There are also two format shortcuts:
