@@ -15,32 +15,32 @@ pypi: dist ## Deploy to the actual PyPI
 	python -m twine upload dist/*
 
 pypi-test: dist ## Deploy to the test PyPI
-	python3 -m twine upload --verbose --repository testpypi dist/*
+	python -m twine upload --verbose --repository testpypi dist/*
 
 help: ## Display this help
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
 
 requirements.%.txt: requirements.%.in requirements.txt
 	@echo "Builing $@"
-	@pip-compile --generate-hashes -q -o $@ $<
+	@python -m piptools compile -q -o $@ $<
 	@touch $@
 
 requirements.txt: requirements.in
 	@echo "Builing $@"
-	@pip-compile --generate-hashes -q $^
+	@python -m piptools compile -q $^
 
 pip: requirements.txt $(REQS) ## Install development requirements
 	@echo "Installing $^"
-	@pip-sync $^
+	@python -m piptools sync $^
 
 install: pip
 
 $(HOOKS):
-	pre-commit install
+	python -m pre-commit install
 
 pre-init:
-	pip install --upgrade pip
-	pip install wheel pip-tools
+	python -m pip install --upgrade pip
+	python -m pip install wheel pip-tools
 
 init: .envrc pre-init install $(HOOKS) ## Initalise a dev enviroment
 	@which direnv > /dev/null || echo "direnv not found but recommended"
