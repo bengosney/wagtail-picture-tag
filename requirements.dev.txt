@@ -538,9 +538,9 @@ willow==1.4.1 \
     # via
     #   -c requirements.txt
     #   willowavif
-willowavif==0.0.1 \
-    --hash=sha256:68a920e958821d36d67eb6b55b87c6cdbd07f599dcb1e7d61006966af75aebdc \
-    --hash=sha256:999faa6cd865a140e5990db7783530324791a805b368e20cd7b220613804145e
+willowavif==0.1.0 \
+    --hash=sha256:328059493bf0ca711c828ebcbad4efa02a19435917f4a250091e75237c5f2ced \
+    --hash=sha256:449c19b28f9ccb5665c6d588aaf4ce7c3ca402150925dbb6c59c38aa87551887
     # via -r requirements.dev.in
 zipp==3.8.0 \
     --hash=sha256:56bf8aadb83c24db6c4b577e13de374ccfb67da2078beba1d037c17980bf43ad \
