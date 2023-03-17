@@ -3,10 +3,9 @@
 black
 build
 django-stubs
-flit
 model_bakery
 mypy
-pip-tools>=6.6.2
+pip-tools
 pre-commit
 pytest
 pytest-django

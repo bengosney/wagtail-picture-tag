@@ -102,9 +102,7 @@ djangorestframework==3.14.0
     #   -r requirements.txt
     #   wagtail
 docutils==0.19
-    # via
-    #   flit
-    #   readme-renderer
+    # via readme-renderer
 draftjs-exporter==2.1.7
     # via
     #   -c requirements.txt
@@ -117,10 +115,6 @@ et-xmlfile==1.1.0
     #   openpyxl
 filelock==3.10.0
     # via virtualenv
-flit==3.8.0
-    # via -r requirements.dev.in
-flit-core==3.8.0
-    # via flit
 html5lib==1.1
     # via
     #   -c requirements.txt
@@ -231,7 +225,6 @@ requests==2.28.2
     # via
     #   -c requirements.txt
     #   -r requirements.txt
-    #   flit
     #   requests-toolbelt
     #   twine
     #   wagtail
@@ -267,8 +260,6 @@ telepath==0.3
     #   wagtail
 tomli==2.0.1
     # via django-stubs
-tomli-w==1.0.0
-    # via flit
 twine==4.0.2
     # via -r requirements.dev.in
 types-pytz==2022.7.1.2
