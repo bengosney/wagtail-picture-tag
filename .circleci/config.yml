@@ -6,31 +6,26 @@ jobs:
   build:
     docker:
       - image: cimg/python:3.10.2
-        environment:
-          ENV: testing
 
     steps:
       - checkout
       - restore_cache:
           key: v3-deps-{{ checksum "requirements.dev.txt" }}-{{ checksum "requirements.txt" }}
       - python/install-packages:
-          pkg-manager: pipenv
-      - run:
-          name: install dependencies
-          command: pipenv install --dev -r requirements.dev.txt
+          pkg-manager: pip
+      - python/install-packages:
+          pip-dependency-file: requirements.dev.txt
+          pkg-manager: pip
       - save_cache:
           key: v3-deps-{{ checksum "requirements.dev.txt" }}-{{ checksum "requirements.txt" }}
           paths:
             - /home/circleci/.local/share/virtualenvs
             - /home/circleci/.cache/pip
-            - /home/circleci/.cache/pipenv
-            - ./Pipfile.lock
-            - ./Pipfile
       - run:
           name: Run tests
           command: |
             mkdir test-results
-            pipenv run pytest --junitxml=test-results/junit.xml
+            pytest --junitxml=test-results/junit.xml
       - store_test_results:
           path: test-results
       - store_artifacts:

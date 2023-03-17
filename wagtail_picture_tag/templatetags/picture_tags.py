@@ -18,9 +18,11 @@ from django.utils.safestring import mark_safe
 from wagtail.images.exceptions import InvalidFilterSpecError
 from wagtail.images.models import AbstractImage, AbstractRendition, Filter, Rendition
 
-with contextlib.suppress(ImportError):
-    # Third Party
+try:
     import willowavif  # noqa
+except ImportError as e:
+    if e.name != "willowavif":
+        raise e
 
 AttrsType = Mapping[str, object]
 
