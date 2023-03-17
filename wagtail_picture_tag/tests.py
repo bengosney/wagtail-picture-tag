@@ -1,4 +1,5 @@
 # Standard Library
+import contextlib
 import re
 from pathlib import Path
 from typing import cast
@@ -12,22 +13,30 @@ from django.test import TestCase
 from wagtail.images.models import AbstractRendition, Image
 
 # Third Party
+from model_bakery import baker
+from model_bakery.random_gen import gen_image_field
 from model_bakery.recipe import Recipe
 
 # Locals
 from .templatetags.picture_tags import AttrsType, get_attrs, get_media_query, get_type
 
+try:
+    import willowavif  # noqa
+except ImportError as e:
+    if e.name != "willowavif":
+        raise e
 
 class PictureTagTests(TestCase):
     @classmethod
     def tearDownClass(cls):
         base = (Path(settings.BASE_DIR) / "..").resolve()
 
-        for dir in ["images", "original_images"]:
-            path = base / dir
-            for f in path.glob("*"):
-                f.unlink()
-            Path.rmdir(path)
+        with contextlib.suppress(FileNotFoundError):
+            for dir in ["images", "original_images"]:
+                path = base / dir
+                for f in path.glob("*"):
+                    f.unlink()
+                Path.rmdir(path)
 
         super().tearDownClass()
 
@@ -35,6 +44,9 @@ class PictureTagTests(TestCase):
         self.width: int = 100
         self.height: int = 100
         self.image_recipe: Recipe[Image] = Recipe(Image, title="mock", width=self.width, height=self.height, _create_files=True)
+        
+        baker.generators.add('wagtail.images.models.WagtailImageField', gen_image_field)
+        self.maxDiff = 1000
 
         return super().setUp()
 

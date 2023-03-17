@@ -28,7 +28,7 @@ $(PIP_SYNC_PATH): $(PIP_PATH) $(WHEEL_PATH) .direnv
 $(PRE_COMMIT_PATH): $(PIP_PATH) $(WHEEL_PATH) .direnv
 	@python -m pip install pre-commit
 
-dist: $(PYTHONFILES) pyproject.toml
+dist: $(PYTHONFILES) pyproject.toml clean
 	python -m build
 	@touch dist
 
@@ -86,6 +86,7 @@ clean: ## Remove all build files
 	find . -type d -name '__pycache__' -delete
 	rm -rf .pytest_cache
 	rm -f .testmondata
+	rm -rf dist
 
 install: $(PIP_SYNC_PATH) requirements
 

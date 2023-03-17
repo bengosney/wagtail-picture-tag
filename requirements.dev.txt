@@ -307,7 +307,7 @@ willow==1.4.1
     #   -r requirements.txt
     #   wagtail
     #   willowavif
-willowavif==0.1.2
+willowavif==0.1.3
     # via -r requirements.dev.in
 wrapt==1.15.0
     # via willowavif
