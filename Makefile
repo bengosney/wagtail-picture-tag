@@ -66,7 +66,7 @@ requirements.%.txt: requirements.%.in requirements.txt
 
 requirements.txt: pyproject.toml
 	@echo "Builing $@"
-	@python -m piptools compile --generate-hashes -q $^
+	@python -m piptools compile -q $^
 
 .direnv: .envrc
 	python -m pip install --upgrade pip
@@ -82,8 +82,8 @@ requirements.txt: pyproject.toml
 init: .direnv .git .git/hooks/pre-commit requirements.dev.txt ## Initalise a enviroment
 
 clean: ## Remove all build files
-	find . -name '*.pyc' -delete
-	find . -type d -name '__pycache__' -delete
+	find . -maxdepth 3 -name '*.pyc' -delete
+	find . -maxdepth 3 -type d -name '__pycache__' -delete
 	rm -rf .pytest_cache
 	rm -f .testmondata
 	rm -rf dist

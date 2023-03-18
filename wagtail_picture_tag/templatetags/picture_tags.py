@@ -3,8 +3,8 @@ import contextlib
 import hashlib
 import os
 import re
+from collections.abc import Mapping
 from io import BytesIO
-from typing import Mapping
 
 # Django
 from django import template
@@ -19,6 +19,7 @@ from wagtail.images.exceptions import InvalidFilterSpecError
 from wagtail.images.models import AbstractImage, AbstractRendition, Filter, Rendition
 
 try:
+    # Third Party
     import willowavif  # noqa
 except ImportError as e:
     if e.name != "willowavif":
@@ -72,9 +73,7 @@ def get_avif_rendition(image: AbstractImage, image_rendition: AbstractRendition,
                 focal_point_key=cache_key,
             )
         except Rendition.DoesNotExist:
-            avifRendition = _get_avif_renditions_fallback(
-                image_rendition, image, avifSpec, cache_key
-            )
+            avifRendition = _get_avif_renditions_fallback(image_rendition, image, avifSpec, cache_key)
     return avifRendition
 
 
