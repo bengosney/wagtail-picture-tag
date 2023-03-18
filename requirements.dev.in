@@ -5,6 +5,7 @@ build
 django-stubs
 model_bakery
 mypy
+nox
 pip-tools
 pre-commit
 pytest

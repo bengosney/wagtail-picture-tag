@@ -30,7 +30,7 @@ Homepage = "https://github.com/bengosney/wagtail-picture-tag"
 
 [build-system]
 requires = ['setuptools>=40.8.0', 'wheel']
-build-backend = 'setuptools.build_meta:__legacy__'
+build-backend = 'setuptools.build_meta'
 
 [tool.setuptools]
 include-package-data = true
@@ -56,14 +56,9 @@ include_trailing_comma = true
 force_grid_wrap = 0
 use_parentheses = true
 ensure_newline_before_comments = true
-line_length = 128
-
-[tool.pycodestyle]
-max_line_length = "128"
 
 [tool.flake8]
 exclude = ".git,*migrations*,node_modules,.history"
-max-line-length = "128"
 extend-ignore = "E203"
 
 [tool.mypy]
@@ -84,7 +79,6 @@ warn_unreachable = true
 warn_no_return = true
 
 [tool.black]
-line-length = 128
 target-version = ['py310']
 
 [tool.pycln]
