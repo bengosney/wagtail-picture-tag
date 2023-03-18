@@ -3,7 +3,7 @@ Wagtail Picture Tag
 ===================
 
 Wagtail Picture Tag adds a picture template tag.
-This is not supposed to be a solution for all situations but to be 
+This is not supposed to be a solution for all situations but to be
 a shortcut most.
 
 It takes a the same parameters as the Wagtail Image tag but it
@@ -57,7 +57,7 @@ Testing
 -------
 .. image:: https://circleci.com/gh/bengosney/wagtail-picture-tag/tree/main.svg?style=svg
         :target: https://circleci.com/gh/bengosney/wagtail-picture-tag/tree/main
-        
+
 Testing is done with pytest. Install and test can be done with::
 
     pip install -r requirements.txt -r requirements.dev.txt

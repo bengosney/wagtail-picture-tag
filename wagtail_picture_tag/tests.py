@@ -18,12 +18,7 @@ from model_bakery.random_gen import gen_image_field
 from model_bakery.recipe import Recipe
 
 # Locals
-from .templatetags.picture_tags import (
-    AttrsType,
-    get_attrs,
-    get_media_query,
-    get_type,
-)
+from .templatetags.picture_tags import AttrsType, get_attrs, get_media_query, get_type
 
 try:
     # Third Party
@@ -50,18 +45,9 @@ class PictureTagTests(TestCase):
     def setUp(self) -> None:
         self.width: int = 100
         self.height: int = 100
-        self.image_recipe: Recipe[Image] = Recipe(
-            Image,
-            title="mock",
-            width=self.width,
-            height=self.height,
-            _create_files=True,
-        )
+        self.image_recipe: Recipe[Image] = Recipe(Image, title="mock", width=self.width, height=self.height, _create_files=True)
         with contextlib.suppress(AttributeError):
-            baker.generators.add(
-                "wagtail.images.models.WagtailImageField",
-                gen_image_field,
-            )
+            baker.generators.add("wagtail.images.models.WagtailImageField", gen_image_field)
         self.maxDiff = 1000
 
         return super().setUp()
@@ -115,10 +101,7 @@ class PictureTagTests(TestCase):
         )
 
         for spec, expected in specs:
-            self.assertEqual(
-                get_media_query(spec, cast(AbstractRendition, fakeImage())),
-                expected,
-            )
+            self.assertEqual(get_media_query(spec, cast(AbstractRendition, fakeImage())), expected)
 
     def bake_image(self, **kwargs) -> Image:
         return self.image_recipe.make(_create_files=True, **kwargs)
@@ -154,16 +137,10 @@ class PictureTagTests(TestCase):
 
         image = self.bake_image()
         context = Context({"image": image})
-        template = Template(
-            f"""{{% load picture_tags %}}
-            {{% picture image {spec} photo lazy %}}"""
-        )
+        template = Template(f"{{% load picture_tags %}}{{% picture image {spec} photo lazy %}}")
 
         got = template.render(context)
-        match = re.search(
-            rf"images/mock_img(_[\w\d]+)?\.([\w\d]+)\.{spec}\.format-",
-            got,
-        )
+        match = re.search(rf"images/mock_img(_[\w\d]+)?\.([\w\d]+)\.{spec}\.format-", got)
         self.assertIsNotNone(match)
         if match is not None:
             expected = f"""<picture>
@@ -185,9 +162,7 @@ class PictureTagTests(TestCase):
 
         image = self.bake_image()
         context = Context({"image": image})
-        template = Template(
-            f"{{% load picture_tags %}}{{% picture image {spec} photo %}}"
-        )
+        template = Template(f"{{% load picture_tags %}}{{% picture image {spec} photo %}}")
 
         got = template.render(context)
         match = re.search(
