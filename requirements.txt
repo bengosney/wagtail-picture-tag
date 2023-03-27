@@ -23,7 +23,7 @@ django==4.1.7
     #   django-treebeard
     #   djangorestframework
     #   wagtail
-django-filter==22.1
+django-filter==23.1
     # via wagtail
 django-modelcluster==6.0
     # via wagtail
