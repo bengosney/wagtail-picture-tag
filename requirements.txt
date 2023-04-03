@@ -47,7 +47,7 @@ l18n==2021.3
     # via wagtail
 openpyxl==3.1.2
     # via wagtail
-pillow==9.4.0
+pillow==9.5.0
     # via wagtail
 pytz==2023.3
     # via
