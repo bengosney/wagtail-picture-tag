@@ -190,7 +190,7 @@ pygments==2.14.0
     #   rich
 pyproject-hooks==1.0.0
     # via build
-pytest==7.3.0
+pytest==7.3.1
     # via
     #   -r requirements.dev.in
     #   pytest-django
