@@ -83,7 +83,7 @@ django-taggit==3.1.0
     # via
     #   -c requirements.txt
     #   wagtail
-django-treebeard==4.6.1
+django-treebeard==4.7
     # via
     #   -c requirements.txt
     #   wagtail
@@ -149,7 +149,7 @@ mypy-extensions==1.0.0
     #   mypy
 nodeenv==1.7.0
     # via pre-commit
-nox==2022.11.21
+nox==2023.4.22
     # via -r requirements.dev.in
 openpyxl==3.1.2
     # via
@@ -226,11 +226,11 @@ six==1.16.0
     #   bleach
     #   html5lib
     #   l18n
-soupsieve==2.4
+soupsieve==2.4.1
     # via
     #   -c requirements.txt
     #   beautifulsoup4
-sqlparse==0.4.3
+sqlparse==0.4.4
     # via
     #   -c requirements.txt
     #   django
