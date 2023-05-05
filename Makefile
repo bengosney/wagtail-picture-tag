@@ -94,10 +94,12 @@ requirements: requirements.txt $(REQS) ## Install development requirements (defa
 	@echo "Installing $^"
 	@python -m piptools sync $^
 
-upgrade:
-	python -m piptools compile -U requirements.in
+upgrade: requirements.txt $(REQS)
+	python -m piptools compile -U pyproject.toml
 	python -m piptools compile -U $(INS)
 	$(MAKE) install
+	python -m pre_commit autoupdate
+	python -m pre_commit run --all
 
 dev: init install ## Start work
 	code .
