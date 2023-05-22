@@ -58,7 +58,7 @@ pytz==2023.3
     #   django-modelcluster
     #   djangorestframework
     #   l18n
-requests==2.30.0
+requests==2.31.0
     # via wagtail
 six==1.16.0
     # via
