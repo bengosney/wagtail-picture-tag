@@ -72,7 +72,7 @@ telepath==0.3
     # via wagtail
 urllib3==2.0.2
     # via requests
-wagtail==5.0
+wagtail==5.0.1
     # via wagtail-picture-tag (pyproject.toml)
 webencodings==0.5.1
     # via html5lib
