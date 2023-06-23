@@ -198,7 +198,7 @@ pygments==2.15.1
     #   rich
 pyproject-hooks==1.0.0
     # via build
-pytest==7.3.2
+pytest==7.4.0
     # via
     #   -r requirements.dev.in
     #   pytest-django
@@ -266,7 +266,7 @@ virtualenv==20.23.0
     # via
     #   nox
     #   pre-commit
-wagtail==5.0.1
+wagtail==5.0.2
     # via
     #   -c requirements.txt
     #   wagtail-picture-tag
