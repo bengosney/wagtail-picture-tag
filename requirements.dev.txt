@@ -79,7 +79,7 @@ django-permissionedforms==0.1
     # via
     #   -c requirements.txt
     #   wagtail
-django-stubs==4.2.2
+django-stubs==4.2.3
     # via -r requirements.dev.in
 django-stubs-ext==4.2.2
     # via django-stubs
