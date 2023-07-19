@@ -37,7 +37,7 @@ django-treebeard==4.7
     # via wagtail
 djangorestframework==3.14.0
     # via wagtail
-draftjs-exporter==2.1.7
+draftjs-exporter==4.1.2
     # via wagtail
 et-xmlfile==1.1.0
     # via openpyxl
