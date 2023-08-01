@@ -16,7 +16,7 @@ charset-normalizer==3.2.0
     # via requests
 defusedxml==0.7.1
     # via willow
-django==4.2.3
+django==4.2.4
     # via
     #   django-filter
     #   django-modelcluster
