@@ -76,5 +76,5 @@ wagtail==5.0.2
     # via wagtail-picture-tag (pyproject.toml)
 webencodings==0.5.1
     # via html5lib
-willow==1.5.1
+willow==1.6
     # via wagtail
