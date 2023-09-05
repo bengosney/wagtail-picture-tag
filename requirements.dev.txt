@@ -54,7 +54,7 @@ defusedxml==0.7.1
     #   willow
 distlib==0.3.6
     # via virtualenv
-django==4.2.4
+django==4.2.5
     # via
     #   -c requirements.txt
     #   django-filter
@@ -79,7 +79,7 @@ django-permissionedforms==0.1
     # via
     #   -c requirements.txt
     #   wagtail
-django-stubs==4.2.3
+django-stubs==4.2.4
     # via -r requirements.dev.in
 django-stubs-ext==4.2.2
     # via django-stubs
@@ -234,7 +234,7 @@ six==1.16.0
     #   bleach
     #   html5lib
     #   l18n
-soupsieve==2.4.1
+soupsieve==2.5
     # via
     #   -c requirements.txt
     #   beautifulsoup4
