@@ -24,7 +24,7 @@ black==23.7.0
     # via -r requirements.dev.in
 bleach==6.0.0
     # via readme-renderer
-build==1.0.0
+build==1.0.3
     # via
     #   -r requirements.dev.in
     #   pip-tools
@@ -204,7 +204,7 @@ pytest==7.4.1
     #   pytest-django
 pytest-django==4.5.2
     # via -r requirements.dev.in
-pytz==2023.3
+pytz==2023.3.post1
     # via
     #   -c requirements.txt
     #   django-modelcluster
