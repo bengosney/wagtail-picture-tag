@@ -198,13 +198,13 @@ pygments==2.15.1
     #   rich
 pyproject-hooks==1.0.0
     # via build
-pytest==7.4.1
+pytest==7.4.2
     # via
     #   -r requirements.dev.in
     #   pytest-django
 pytest-django==4.5.2
     # via -r requirements.dev.in
-pytz==2023.3
+pytz==2023.3.post1
     # via
     #   -c requirements.txt
     #   django-modelcluster
