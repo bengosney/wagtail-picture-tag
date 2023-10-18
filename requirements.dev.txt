@@ -79,9 +79,9 @@ django-permissionedforms==0.1
     # via
     #   -c requirements.txt
     #   wagtail
-django-stubs==4.2.4
+django-stubs==4.2.5
     # via -r requirements.dev.in
-django-stubs-ext==4.2.2
+django-stubs-ext==4.2.5
     # via django-stubs
 django-taggit==3.1.0
     # via
@@ -257,7 +257,7 @@ typing-extensions==4.5.0
     #   django-stubs
     #   django-stubs-ext
     #   mypy
-urllib3==2.0.6
+urllib3==2.0.7
     # via
     #   -c requirements.txt
     #   requests
