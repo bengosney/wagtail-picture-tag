@@ -20,7 +20,7 @@ beautifulsoup4==4.11.2
     # via
     #   -c requirements.txt
     #   wagtail
-black==23.10.0
+black==23.10.1
     # via -r requirements.dev.in
 bleach==6.0.0
     # via readme-renderer
