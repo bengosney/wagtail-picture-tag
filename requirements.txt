@@ -12,7 +12,7 @@ beautifulsoup4==4.11.2
     # via wagtail
 certifi==2023.7.22
     # via requests
-charset-normalizer==3.3.0
+charset-normalizer==3.3.1
     # via requests
 defusedxml==0.7.1
     # via willow
