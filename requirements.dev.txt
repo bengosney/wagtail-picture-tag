@@ -79,7 +79,7 @@ django-permissionedforms==0.1
     # via
     #   -c requirements.txt
     #   wagtail
-django-stubs==4.2.5
+django-stubs==4.2.6
     # via -r requirements.dev.in
 django-stubs-ext==4.2.5
     # via django-stubs
@@ -148,9 +148,7 @@ model-bakery==1.16.0
 more-itertools==9.1.0
     # via jaraco-classes
 mypy==1.6.1
-    # via
-    #   -r requirements.dev.in
-    #   django-stubs
+    # via -r requirements.dev.in
 mypy-extensions==1.0.0
     # via
     #   black
@@ -266,7 +264,7 @@ virtualenv==20.23.0
     # via
     #   nox
     #   pre-commit
-wagtail==5.0.2
+wagtail==5.0.5
     # via
     #   -c requirements.txt
     #   wagtail-picture-tag
