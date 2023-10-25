@@ -4,7 +4,12 @@ import hashlib
 import os
 import re
 from collections.abc import Mapping
+from collections import defaultdict
 from io import BytesIO
+import operator
+from functools import partial, lru_cache
+from typing import Callable, Literal
+from dataclasses import dataclass
 
 # Django
 from django import template
@@ -30,8 +35,9 @@ AttrsType = Mapping[str, object]
 register = template.Library()
 
 spec_regex = re.compile(r"^(?P<op>\w+)((-(?P<size>\d+))(x(\d+))?)?$")
+size_regex = re.compile(r"^size-(((?P<mod>min|max)(?P<width>\d+))-)?(?P<size>\d+(px|vw))$")
 
-
+@lru_cache
 def parse_spec(spec: str) -> tuple[str | None, int]:
     """Parse a filter specification."""
     if not (match := spec_regex.match(spec)):
@@ -118,15 +124,26 @@ def get_renditions(image: AbstractImage, filter_spec: str, formats: list[str]) -
 
     return renditions
 
+@lru_cache
+def parse_size(raw_media: str) -> str:
+    size = "100vw"
+    if match := size_regex.match(raw_media):    
+        groups = match.groupdict()
+        size = str(groups['size'])
+        if groups['mod'] is not None and groups['width'] is not None:
+            size = f"({groups['mod']}-width: {groups['width']}px) {size}"
+
+    return size
 
 @register.tag()
 def picture(parser, token):
     bits = token.split_contents()[1:]
     image_expr = parser.compile_filter(bits[0])
 
-    filter_specs = []
-    formats = []
-    loading = "eager"
+    filter_specs: list[str] = []
+    formats: list[str] = []
+    loading: Literal["eager"]|Literal["lazy"] = "eager"
+    size_specs: list[str] = []
     for spec in bits[1:]:
         if spec == "transparent":
             formats += ["png", "webp", "avif"]
@@ -134,6 +151,8 @@ def picture(parser, token):
             formats += ["jpeg", "webp", "avif"]
         elif spec.startswith("format-"):
             formats.append(spec.split("-")[1])
+        elif spec.startswith("size-"):
+            size_specs.append(spec)
         elif spec == "lazy":
             loading = "lazy"
         else:
@@ -142,13 +161,13 @@ def picture(parser, token):
     if not formats:
         formats = ["webp", "jpeg", "png", "avif"]
 
-    return PictureNode(image_expr, filter_specs, list(set(formats)), loading)
+    return PictureNode(image_expr, filter_specs, list(set(formats)), loading, size_specs)
 
 
 def get_attrs(attrs: AttrsType) -> str:
     return " ".join(f'{k}="{v}"' for k, v in attrs.items() if v != "eager" or k != "loading")
 
-
+@lru_cache
 def get_type(ext: str) -> str:
     ext = ext.lower().strip(".")
     type_ = "jpeg" if ext == "jpg" else ext
@@ -161,24 +180,24 @@ def get_source(rendition: AbstractRendition, **kwargs) -> str:
     attrs = {
         "srcset": rendition.url,
         "type": get_type(extension),
-        "width": rendition.width,
-        "height": rendition.height,
     } | kwargs
 
     return f"<source {get_attrs(attrs)} />"
 
 
+
 class PictureNode(template.Node):
-    def __init__(self, image: FilterExpression, specs: list[str], formats: list[str], loading: str) -> None:
+    def __init__(self, image: FilterExpression, specs: list[str], formats: list[str], loading: str, sizes: list[str]) -> None:
         self.image = image
         self.specs = specs
         self.formats = formats
         self.loading = loading
+        self.sizes = sizes
 
         super().__init__()
 
     def render(self, context: Context) -> str:
-        if (image := self.image.resolve(context)) is None:
+        if (image := self.image.resolve(context)) is None: # type: ignore
             return ""
 
         try:
@@ -197,36 +216,32 @@ class PictureNode(template.Node):
             cache_key = None
             cache = None
 
-        baseSpec: str = self.specs[0]
-        sizedSpecs: list[str] = self.specs[1:]
+        image_srcs: dict[str, list[str]] = defaultdict(lambda: [])
+        image_sizes: set[int] = set()
+        sorted_specs = sorted(self.specs, key=lambda spec: parse_spec(spec)[1])
         base = None
-
-        srcsets: list[str] = []
-        sizedSpecs.sort(key=lambda spec: parse_spec(spec)[1])
-        for spec in sizedSpecs:
+        for spec in sorted_specs:
             renditions = get_renditions(image, spec, self.formats)
             for rendition in renditions:
-                attrs = {
-                    "loading": self.loading,
-                    "media": get_media_query(spec, rendition),
-                }
-                srcsets.append(get_source(rendition, **attrs))
-
-        renditions = get_renditions(image, baseSpec, self.formats)
-        for rendition in renditions:
-            _, extension = os.path.splitext(rendition.file.name)
-            srcsets.append(get_source(rendition, loading=self.loading))
-
-            if base is None and extension in [".jpg", ".png"]:
-                base = rendition
+                _, extension = os.path.splitext(rendition.file.name)
+                image_srcs[get_type(extension)].append(f"{rendition.url} {rendition.width}w")
+                image_sizes.add(rendition.width)
+                base = base or rendition
 
         if base is None:
-            base = renditions.pop()
+            return ""
+
+        srcsets: list[str] = []
+        for file_type, srcset in image_srcs.items():
+            attrs = {
+                "srcset": ", ".join(srcset),
+                "type": file_type,
+                "sizes": ", ".join(parse_size(s) for s in self.sizes)
+            }
+            srcsets.append(f"<source {get_attrs(attrs)} />")
 
         attrs = {
             "src": base.url,
-            "width": base.width,
-            "height": base.height,
             "alt": base.alt,
             "loading": self.loading,
         }
