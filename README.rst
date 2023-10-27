@@ -4,21 +4,41 @@ Wagtail Picture Tag
 
 Wagtail Picture Tag adds a picture template tag.
 This is not supposed to be a solution for all situations but to be
-a shortcut most.
+a shortcut for most.
 
-It takes a the same parameters as the Wagtail Image tag but it
-can accept multiple size and format parameters.
-When multiple sizes are given media queries are automaticly generated to match.
-Multiple formats are sorted by file size.
+It accepts 3 main types of filters: formats, resizing methods and sizes.
 
-It also takes the argument `lazy` that simply adds `loading="lazy"` to the HTML tag.
+Formats
+-------
+By default it will try and create JPEG, PNG, WEBP and AVIF (if available).
 
-By default it will try and create JPEG, PNG, JPEG and AVIF (if available).
+You may use `format-jpeg`, `format-png`, `format-webp`, `format-gif` and `format-avif`
+
 There are also two format shortcuts:
 
 - photo - will create JPEG, WEBP and AVIF
 - transparent - will create WEBP, PNG and AVIF
 
+Resizing
+--------
+Resizing methods are the same as Wagtails with the exception that you
+can provide multiple filters
+
+Sizes
+-----
+Sizes are automatically generated to match resizing filters provided but
+can be specified for more responsive sizes.
+
+`size-250px` will create `sizes="250px"`
+`size-max100-300vw size-250px` will create `sizes="(max-width: 300px) 100vw, 250px"`
+
+Lazy
+----
+It also takes the argument `lazy` that simply adds `loading="lazy"` to the HTML tag.
+
+
+AVIF
+----
 Currently Willow (the image library used by Wagtail) does not support AVIF
 but support can be patched in by installing `willowavif` package.
 
