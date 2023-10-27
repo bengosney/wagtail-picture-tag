@@ -3,13 +3,11 @@ import contextlib
 import hashlib
 import os
 import re
-from collections.abc import Mapping
 from collections import defaultdict
+from collections.abc import Mapping
+from functools import cached_property, lru_cache
 from io import BytesIO
-import operator
-from functools import partial, lru_cache, cached_property
-from typing import Callable, Literal, Iterable
-from dataclasses import dataclass
+from typing import Literal
 
 # Django
 from django import template
@@ -36,6 +34,7 @@ register = template.Library()
 
 spec_regex = re.compile(r"^(?P<op>\w+)((-(?P<size>\d+))(x(\d+))?)?$")
 size_regex = re.compile(r"^size-(((?P<mod>min|max)(?P<width>\d+))-)?(?P<size>\d+(px|vw))$")
+
 
 @lru_cache
 def parse_spec(spec: str) -> tuple[str | None, int]:
@@ -124,16 +123,18 @@ def get_renditions(image: AbstractImage, filter_spec: str, formats: list[str]) -
 
     return renditions
 
+
 @lru_cache
 def parse_size(raw_media: str) -> str:
     size = "100vw"
-    if match := size_regex.match(raw_media):    
+    if match := size_regex.match(raw_media):
         groups = match.groupdict()
-        size = str(groups['size'])
-        if groups['mod'] is not None and groups['width'] is not None:
+        size = str(groups["size"])
+        if groups["mod"] is not None and groups["width"] is not None:
             size = f"({groups['mod']}-width: {groups['width']}px) {size}"
 
     return size
+
 
 @register.tag()
 def picture(parser, token):
@@ -142,7 +143,7 @@ def picture(parser, token):
 
     filter_specs: list[str] = []
     formats: list[str] = []
-    loading: Literal["eager"]|Literal["lazy"] = "eager"
+    loading: Literal["eager"] | Literal["lazy"] = "eager"
     size_specs: list[str] = []
     for spec in bits[1:]:
         if spec == "transparent":
@@ -167,6 +168,7 @@ def picture(parser, token):
 def get_attrs(attrs: AttrsType) -> str:
     return " ".join(f'{k}="{v}"' for k, v in attrs.items() if v != "eager" or k != "loading")
 
+
 @lru_cache
 def get_type(ext: str) -> str:
     ext = ext.lower().strip(".")
@@ -184,10 +186,11 @@ def get_source(rendition: AbstractRendition, **kwargs) -> str:
 
     return f"<source {get_attrs(attrs)} />"
 
+
 @lru_cache
 def build_media_query(sizes: tuple[int]) -> str:
     media_queries: list[str] = []
-    prev: int|None = None
+    prev: int | None = None
     for size in sizes[:-1]:
         if prev is None:
             media_queries.append(f"(max-width: {size}px) {size}px")
@@ -198,6 +201,7 @@ def build_media_query(sizes: tuple[int]) -> str:
     media_queries.append(f"{sizes[-1]}px")
 
     return ", ".join(media_queries)
+
 
 class PictureNode(template.Node):
     def __init__(self, image: FilterExpression, specs: list[str], formats: list[str], loading: str, sizes: list[str]) -> None:
@@ -214,7 +218,7 @@ class PictureNode(template.Node):
         return len(self.sizes) > 0
 
     def render(self, context: Context) -> str:
-        if (image := self.image.resolve(context)) is None: # type: ignore
+        if (image := self.image.resolve(context)) is None:  # type: ignore
             return ""
 
         try:
@@ -233,7 +237,7 @@ class PictureNode(template.Node):
             cache_key = None
             cache = None
 
-        image_srcs: dict[str, list[str]] = defaultdict(lambda: [])
+        image_srcs: dict[str, list[str]] = defaultdict(list)
         image_sizes: set[int] = set()
         sorted_specs = sorted(self.specs, key=lambda spec: parse_spec(spec)[1])
         base = None
