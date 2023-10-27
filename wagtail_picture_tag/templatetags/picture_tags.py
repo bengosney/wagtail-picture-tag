@@ -32,36 +32,7 @@ AttrsType = Mapping[str, object]
 
 register = template.Library()
 
-spec_regex = re.compile(r"^(?P<op>\w+)((-(?P<size>\d+))(x(\d+))?)?$")
 size_regex = re.compile(r"^size-(((?P<mod>min|max)(?P<width>\d+))-)?(?P<size>\d+(px|vw))$")
-
-
-@lru_cache
-def parse_spec(spec: str) -> tuple[str | None, int]:
-    """Parse a filter specification."""
-    if not (match := spec_regex.match(spec)):
-        return None, 0
-    groups = match.groupdict()
-
-    try:
-        return f"{groups['op']}", int(groups["size"])
-    except (ValueError, TypeError):
-        return f"{groups['op']}", 0
-
-
-def get_media_query(spec: str, image: AbstractRendition) -> str:
-    """Get a media query for the given filter specification."""
-    mediaquery = ""
-    op, size = parse_spec(spec)
-
-    if op in ["fill", "width"]:
-        mediaquery = f"(max-width: {size}px)"
-    elif op in ["max", "height", "scale", "original"]:
-        mediaquery = f"(max-width: {image.width}px)"
-    elif op in ["min"]:
-        mediaquery = f"(min-width: {size}px)"
-
-    return mediaquery
 
 
 def get_avif_rendition(image: AbstractImage, image_rendition: AbstractRendition, filter_spec: str) -> AbstractRendition:
@@ -125,9 +96,9 @@ def get_renditions(image: AbstractImage, filter_spec: str, formats: list[str]) -
 
 
 @lru_cache
-def parse_size(raw_media: str) -> str:
+def parse_size(raw_str: str) -> str:
     size = "100vw"
-    if match := size_regex.match(raw_media):
+    if match := size_regex.match(raw_str):
         groups = match.groupdict()
         size = str(groups["size"])
         if groups["mod"] is not None and groups["width"] is not None:
@@ -174,17 +145,6 @@ def get_type(ext: str) -> str:
     ext = ext.lower().strip(".")
     type_ = "jpeg" if ext == "jpg" else ext
     return f"image/{type_}"
-
-
-def get_source(rendition: AbstractRendition, **kwargs) -> str:
-    _, extension = os.path.splitext(rendition.file.name)
-
-    attrs = {
-        "srcset": rendition.url,
-        "type": get_type(extension),
-    } | kwargs
-
-    return f"<source {get_attrs(attrs)} />"
 
 
 @lru_cache
@@ -239,9 +199,8 @@ class PictureNode(template.Node):
 
         image_srcs: dict[str, list[str]] = defaultdict(list)
         image_sizes: set[int] = set()
-        sorted_specs = sorted(self.specs, key=lambda spec: parse_spec(spec)[1])
         base = None
-        for spec in sorted_specs:
+        for spec in self.specs:
             renditions = get_renditions(image, spec, self.formats)
             for rendition in renditions:
                 _, extension = os.path.splitext(rendition.file.name)
