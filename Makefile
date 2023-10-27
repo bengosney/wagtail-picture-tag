@@ -6,7 +6,7 @@ HOOKS=$(.git/hooks/pre-commit)
 INS=$(wildcard requirements.*.in)
 REQS=$(subst in,txt,$(INS))
 
-PYTHONFILES=$(wildcard ./src/**/*.py)
+PYTHONFILES=$(wildcard ./wagtail_picture_tag/**/*.py)
 
 PYTHON_VERSION:=$(shell python --version | cut -d " " -f 2)
 PIP_PATH:=.direnv/python-$(PYTHON_VERSION)/bin/pip
@@ -106,3 +106,6 @@ dev: init install ## Start work
 
 LICENCE:
 	@curl -q https://www.gnu.org/licenses/gpl-3.0.txt > $@
+
+coverage.lcov: $(PYTHONFILES)
+	python -m pytest --cov=. --cov-report lcov
