@@ -3,8 +3,11 @@ import contextlib
 import hashlib
 import os
 import re
+from collections import defaultdict
 from collections.abc import Mapping
+from functools import cached_property, lru_cache
 from io import BytesIO
+from typing import Literal
 
 # Django
 from django import template
@@ -29,34 +32,7 @@ AttrsType = Mapping[str, object]
 
 register = template.Library()
 
-spec_regex = re.compile(r"^(?P<op>\w+)((-(?P<size>\d+))(x(\d+))?)?$")
-
-
-def parse_spec(spec: str) -> tuple[str | None, int]:
-    """Parse a filter specification."""
-    if not (match := spec_regex.match(spec)):
-        return None, 0
-    groups = match.groupdict()
-
-    try:
-        return f"{groups['op']}", int(groups["size"])
-    except (ValueError, TypeError):
-        return f"{groups['op']}", 0
-
-
-def get_media_query(spec: str, image: AbstractRendition) -> str:
-    """Get a media query for the given filter specification."""
-    mediaquery = ""
-    op, size = parse_spec(spec)
-
-    if op in ["fill", "width"]:
-        mediaquery = f"(max-width: {size}px)"
-    elif op in ["max", "height", "scale", "original"]:
-        mediaquery = f"(max-width: {image.width}px)"
-    elif op in ["min"]:
-        mediaquery = f"(min-width: {size}px)"
-
-    return mediaquery
+size_regex = re.compile(r"^size-(((?P<mod>min|max)(?P<width>\d+))-)?(?P<size>\d+(px|vw))$")
 
 
 def get_avif_rendition(image: AbstractImage, image_rendition: AbstractRendition, filter_spec: str) -> AbstractRendition:
@@ -119,14 +95,27 @@ def get_renditions(image: AbstractImage, filter_spec: str, formats: list[str]) -
     return renditions
 
 
+@lru_cache
+def parse_size(raw_str: str) -> str:
+    size = "100vw"
+    if match := size_regex.match(raw_str):
+        groups = match.groupdict()
+        size = str(groups["size"])
+        if groups["mod"] is not None and groups["width"] is not None:
+            size = f"({groups['mod']}-width: {groups['width']}px) {size}"
+
+    return size
+
+
 @register.tag()
 def picture(parser, token):
     bits = token.split_contents()[1:]
     image_expr = parser.compile_filter(bits[0])
 
-    filter_specs = []
-    formats = []
-    loading = "eager"
+    filter_specs: list[str] = []
+    formats: list[str] = []
+    loading: Literal["eager"] | Literal["lazy"] = "eager"
+    size_specs: list[str] = []
     for spec in bits[1:]:
         if spec == "transparent":
             formats += ["png", "webp", "avif"]
@@ -134,6 +123,8 @@ def picture(parser, token):
             formats += ["jpeg", "webp", "avif"]
         elif spec.startswith("format-"):
             formats.append(spec.split("-")[1])
+        elif spec.startswith("size-"):
+            size_specs.append(spec)
         elif spec == "lazy":
             loading = "lazy"
         else:
@@ -142,43 +133,52 @@ def picture(parser, token):
     if not formats:
         formats = ["webp", "jpeg", "png", "avif"]
 
-    return PictureNode(image_expr, filter_specs, list(set(formats)), loading)
+    return PictureNode(image_expr, filter_specs, list(set(formats)), loading, size_specs)
 
 
 def get_attrs(attrs: AttrsType) -> str:
     return " ".join(f'{k}="{v}"' for k, v in attrs.items() if v != "eager" or k != "loading")
 
 
+@lru_cache
 def get_type(ext: str) -> str:
     ext = ext.lower().strip(".")
     type_ = "jpeg" if ext == "jpg" else ext
     return f"image/{type_}"
 
 
-def get_source(rendition: AbstractRendition, **kwargs) -> str:
-    _, extension = os.path.splitext(rendition.file.name)
+@lru_cache
+def build_media_query(sizes: tuple[int]) -> str:
+    media_queries: list[str] = []
+    prev: int | None = None
+    for size in sizes[:-1]:
+        if prev is None:
+            media_queries.append(f"(max-width: {size}px) {size}px")
+        else:
+            media_queries.append(f"(min-width: {prev}px) and (max-width: {size}px) {size}px")
+        prev = size
 
-    attrs = {
-        "srcset": rendition.url,
-        "type": get_type(extension),
-        "width": rendition.width,
-        "height": rendition.height,
-    } | kwargs
+    media_queries.append(f"{sizes[-1]}px")
 
-    return f"<source {get_attrs(attrs)} />"
+    return ", ".join(media_queries)
 
 
 class PictureNode(template.Node):
-    def __init__(self, image: FilterExpression, specs: list[str], formats: list[str], loading: str) -> None:
+    def __init__(self, image: FilterExpression, specs: list[str], formats: list[str], loading: str, sizes: list[str]) -> None:
         self.image = image
         self.specs = specs
         self.formats = formats
         self.loading = loading
+        self.sizes = sizes
 
         super().__init__()
 
+    @cached_property
+    def has_sizes(self):
+        return len(self.sizes) > 0
+
     def render(self, context: Context) -> str:
-        if (image := self.image.resolve(context)) is None:
+        if (image := self.image.resolve(context)) is None:  # type: ignore
             return ""
 
         try:
@@ -197,36 +197,33 @@ class PictureNode(template.Node):
             cache_key = None
             cache = None
 
-        baseSpec: str = self.specs[0]
-        sizedSpecs: list[str] = self.specs[1:]
+        image_srcs: dict[str, list[str]] = defaultdict(list)
+        image_sizes: set[int] = set()
         base = None
-
-        srcsets: list[str] = []
-        sizedSpecs.sort(key=lambda spec: parse_spec(spec)[1])
-        for spec in sizedSpecs:
+        for spec in self.specs:
             renditions = get_renditions(image, spec, self.formats)
             for rendition in renditions:
-                attrs = {
-                    "loading": self.loading,
-                    "media": get_media_query(spec, rendition),
-                }
-                srcsets.append(get_source(rendition, **attrs))
-
-        renditions = get_renditions(image, baseSpec, self.formats)
-        for rendition in renditions:
-            _, extension = os.path.splitext(rendition.file.name)
-            srcsets.append(get_source(rendition, loading=self.loading))
-
-            if base is None and extension in [".jpg", ".png"]:
-                base = rendition
+                _, extension = os.path.splitext(rendition.file.name)
+                image_srcs[get_type(extension)].append(f"{rendition.url} {rendition.width}w")
+                image_sizes.add(rendition.width)
+                base = base or rendition
 
         if base is None:
-            base = renditions.pop()
+            return ""
+
+        srcsets: list[str] = []
+        for file_type, srcset in image_srcs.items():
+            attrs = {
+                "srcset": ", ".join(srcset),
+                "type": file_type,
+                "sizes": ", ".join(parse_size(s) for s in self.sizes)
+                if self.has_sizes
+                else build_media_query(tuple(sorted(image_sizes))),
+            }
+            srcsets.append(f"<source {get_attrs(attrs)} />")
 
         attrs = {
             "src": base.url,
-            "width": base.width,
-            "height": base.height,
             "alt": base.alt,
             "loading": self.loading,
         }

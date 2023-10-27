@@ -1,6 +1,6 @@
 [project]
 name = "wagtail-picture-tag"
-version = "1.0.1"
+version = "2.0.0"
 description = "A Wagtail app to add a picture tag."
 readme = "README.rst"
 authors = [{name = "Ben Gosney", email = "bengosney@googlemail.com"}]
@@ -22,7 +22,7 @@ classifiers = [
     "Topic :: Internet :: WWW/HTTP",
     "Topic :: Internet :: WWW/HTTP :: Dynamic Content",
 ]
-requires-python = ">=3.8"
+requires-python = ">=3.10"
 dependencies = ["wagtail"]
 
 [project.urls]
