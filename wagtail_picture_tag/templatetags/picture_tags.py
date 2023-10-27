@@ -7,8 +7,8 @@ from collections.abc import Mapping
 from collections import defaultdict
 from io import BytesIO
 import operator
-from functools import partial, lru_cache
-from typing import Callable, Literal
+from functools import partial, lru_cache, cached_property
+from typing import Callable, Literal, Iterable
 from dataclasses import dataclass
 
 # Django
@@ -184,7 +184,20 @@ def get_source(rendition: AbstractRendition, **kwargs) -> str:
 
     return f"<source {get_attrs(attrs)} />"
 
+@lru_cache
+def build_media_query(sizes: tuple[int]) -> str:
+    media_queries: list[str] = []
+    prev: int|None = None
+    for size in sizes[:-1]:
+        if prev is None:
+            media_queries.append(f"(max-width: {size}px) {size}px")
+        else:
+            media_queries.append(f"(min-width: {prev}px) and (max-width: {size}px) {size}px")
+        prev = size
 
+    media_queries.append(f"{sizes[-1]}px")
+
+    return ", ".join(media_queries)
 
 class PictureNode(template.Node):
     def __init__(self, image: FilterExpression, specs: list[str], formats: list[str], loading: str, sizes: list[str]) -> None:
@@ -195,6 +208,10 @@ class PictureNode(template.Node):
         self.sizes = sizes
 
         super().__init__()
+
+    @cached_property
+    def has_sizes(self):
+        return len(self.sizes) > 0
 
     def render(self, context: Context) -> str:
         if (image := self.image.resolve(context)) is None: # type: ignore
@@ -236,8 +253,12 @@ class PictureNode(template.Node):
             attrs = {
                 "srcset": ", ".join(srcset),
                 "type": file_type,
-                "sizes": ", ".join(parse_size(s) for s in self.sizes)
             }
+            if self.has_sizes:
+                attrs["sizes"] = ", ".join(parse_size(s) for s in self.sizes)
+            else:
+                attrs["sizes"] = build_media_query(tuple(sorted(image_sizes)))
+
             srcsets.append(f"<source {get_attrs(attrs)} />")
 
         attrs = {
