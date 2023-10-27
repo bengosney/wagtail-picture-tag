@@ -28,17 +28,17 @@ $(PIP_SYNC_PATH): $(PIP_PATH) $(WHEEL_PATH) .direnv
 $(PRE_COMMIT_PATH): $(PIP_PATH) $(WHEEL_PATH) .direnv
 	@python -m pip install pre-commit
 
-dist: $(PYTHONFILES) pyproject.toml clean
+dist: $(PYTHONFILES) pyproject.toml
 	python -m build
 	@touch dist
 
-check: dist
+check: dist ## Run twine check
 	python -m twine check $^/*
 
-pypi: dist
+pypi: dist check ## Deploy new version to PyPI
 	python -m twine upload dist/*
 
-pypi-test: dist
+pypi-test: dist check ## Test Deploy to new version to Test PyPI
 	python3 -m twine upload --verbose --repository testpypi dist/*
 
 help: ## Display this help
@@ -82,11 +82,11 @@ requirements.txt: pyproject.toml
 init: .direnv .git .git/hooks/pre-commit requirements.dev.txt ## Initalise a enviroment
 
 clean: ## Remove all build files
-	find . -maxdepth 3 -name '*.pyc' -delete
-	find . -maxdepth 3 -type d -name '__pycache__' -delete
-	rm -rf .pytest_cache
-	rm -f .testmondata
-	rm -rf dist
+	@find . -maxdepth 3 -name '*.pyc' -delete || true
+	@find . -maxdepth 3 -type d -name '__pycache__' -exec rm -rf {} \; || true
+	@rm -rf .pytest_cache
+	@rm -f .testmondata
+	@rm -f .coverage*
 
 install: $(PIP_SYNC_PATH) requirements
 
