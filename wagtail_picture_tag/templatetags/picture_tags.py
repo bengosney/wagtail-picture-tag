@@ -216,12 +216,10 @@ class PictureNode(template.Node):
             attrs = {
                 "srcset": ", ".join(srcset),
                 "type": file_type,
+                "sizes": ", ".join(parse_size(s) for s in self.sizes)
+                if self.has_sizes
+                else build_media_query(tuple(sorted(image_sizes))),
             }
-            if self.has_sizes:
-                attrs["sizes"] = ", ".join(parse_size(s) for s in self.sizes)
-            else:
-                attrs["sizes"] = build_media_query(tuple(sorted(image_sizes)))
-
             srcsets.append(f"<source {get_attrs(attrs)} />")
 
         attrs = {
