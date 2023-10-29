@@ -117,7 +117,7 @@ class PictureTagTests(TestCase):
   <source srcset="/images/mock_img{match[1] or ''}.{match[2]}.{spec}.format-avif.avif {rendition.width}w" type="image/avif" sizes="{rendition.width}px" />
   <source srcset="/images/mock_img{match[1] or ''}.{match[2]}.{spec}.format-webp.webp {rendition.width}w" type="image/webp" sizes="{rendition.width}px" />
   <source srcset="/images/mock_img{match[1] or ''}.{match[2]}.{spec}.format-jpeg.jpg {rendition.width}w" type="image/jpeg" sizes="{rendition.width}px" />
-  <img src="/images/mock_img{match[1] or ''}.{match[2]}.{spec}.format-avif.avif" alt="mock" />
+  <img src="/images/mock_img{match[1] or ''}.{match[2]}.{spec}.format-avif.avif" alt="mock" width="{rendition.width}" height="{rendition.height}" />
 </picture>"""  # noqa
 
             self.assertHTMLEqual(got, expected)
@@ -138,7 +138,7 @@ class PictureTagTests(TestCase):
   <source srcset="/images/mock_img{match[1] or ''}.{match[2]}.{spec}.format-avif.avif {rendition.width}w" type="image/avif" sizes="{rendition.width}px" />
   <source srcset="/images/mock_img{match[1] or ''}.{match[2]}.{spec}.format-webp.webp {rendition.width}w" type="image/webp" sizes="{rendition.width}px" />
   <source srcset="/images/mock_img{match[1] or ''}.{match[2]}.{spec}.format-jpeg.jpg {rendition.width}w" type="image/jpeg" sizes="{rendition.width}px" />
-  <img src="/images/mock_img{match[1] or ''}.{match[2]}.{spec}.format-avif.avif" alt="mock" loading="lazy" />
+  <img src="/images/mock_img{match[1] or ''}.{match[2]}.{spec}.format-avif.avif" alt="mock" width="{rendition.width}" height="{rendition.height}" loading="lazy" />
 </picture>"""  # noqa
 
             self.assertHTMLEqual(got, expected)
@@ -182,6 +182,8 @@ class PictureTagTests(TestCase):
   />
   <img
     src="/images/mock_img{match[1] or ''}.{match[2]}.{specs[0]}.format-webp.webp"
+    width="{renditions[0].width}"
+    height="{renditions[0].height}"
     alt="mock"
   />
 </picture>"""  # noqa

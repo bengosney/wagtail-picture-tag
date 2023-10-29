@@ -225,6 +225,8 @@ class PictureNode(template.Node):
         attrs = {
             "src": base.url,
             "alt": base.alt,
+            "width": base.width,
+            "height": base.height,
             "loading": self.loading,
         }
 
