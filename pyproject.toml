@@ -1,6 +1,6 @@
 [project]
 name = "wagtail-picture-tag"
-version = "2.0.0"
+version = "2.0.1"
 description = "A Wagtail app to add a picture tag."
 readme = "README.rst"
 authors = [{name = "Ben Gosney", email = "bengosney@googlemail.com"}]
