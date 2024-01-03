@@ -27,7 +27,7 @@ django==4.2.7
     #   wagtail
 django-filter==22.1
     # via wagtail
-django-modelcluster==6.1
+django-modelcluster==6.2
     # via wagtail
 django-permissionedforms==0.1
     # via wagtail
