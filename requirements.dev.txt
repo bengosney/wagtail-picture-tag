@@ -9,19 +9,16 @@
 anyascii==0.3.2
     # via
     #   -c requirements.txt
-    #   -r requirements.txt
     #   wagtail
 argcomplete==3.0.8
     # via nox
 asgiref==3.7.2
     # via
     #   -c requirements.txt
-    #   -r requirements.txt
     #   django
 beautifulsoup4==4.11.2
     # via
     #   -c requirements.txt
-    #   -r requirements.txt
     #   wagtail
 black==23.10.1
     # via -r requirements.dev.in
@@ -31,19 +28,17 @@ build==1.0.3
     # via
     #   -r requirements.dev.in
     #   pip-tools
-certifi==2023.7.22
+certifi==2024.2.2
     # via
     #   -c requirements.txt
-    #   -r requirements.txt
     #   requests
 cffi==1.15.1
     # via cryptography
 cfgv==3.3.1
     # via pre-commit
-charset-normalizer==3.3.1
+charset-normalizer==3.3.2
     # via
     #   -c requirements.txt
-    #   -r requirements.txt
     #   requests
 click==8.1.3
     # via
@@ -55,19 +50,17 @@ coverage[toml]==7.3.2
     # via
     #   coverage
     #   pytest-cov
-cryptography==41.0.4
+cryptography==42.0.2
     # via secretstorage
 defusedxml==0.7.1
     # via
     #   -c requirements.txt
-    #   -r requirements.txt
     #   willow
 distlib==0.3.6
     # via virtualenv
-django==4.2.6
+django==4.2.10
     # via
     #   -c requirements.txt
-    #   -r requirements.txt
     #   django-filter
     #   django-modelcluster
     #   django-permissionedforms
@@ -81,17 +74,14 @@ django==4.2.6
 django-filter==22.1
     # via
     #   -c requirements.txt
-    #   -r requirements.txt
     #   wagtail
-django-modelcluster==6.1
+django-modelcluster==6.2.1
     # via
     #   -c requirements.txt
-    #   -r requirements.txt
     #   wagtail
 django-permissionedforms==0.1
     # via
     #   -c requirements.txt
-    #   -r requirements.txt
     #   wagtail
 django-stubs==4.2.6
     # via -r requirements.dev.in
@@ -100,29 +90,24 @@ django-stubs-ext==4.2.5
 django-taggit==3.1.0
     # via
     #   -c requirements.txt
-    #   -r requirements.txt
     #   wagtail
-django-treebeard==4.7
+django-treebeard==4.7.1
     # via
     #   -c requirements.txt
-    #   -r requirements.txt
     #   wagtail
 djangorestframework==3.14.0
     # via
     #   -c requirements.txt
-    #   -r requirements.txt
     #   wagtail
 docutils==0.19
     # via readme-renderer
 draftjs-exporter==2.1.7
     # via
     #   -c requirements.txt
-    #   -r requirements.txt
     #   wagtail
 et-xmlfile==1.1.0
     # via
     #   -c requirements.txt
-    #   -r requirements.txt
     #   openpyxl
 exceptiongroup==1.1.3
     # via pytest
@@ -131,19 +116,16 @@ filelock==3.12.0
 filetype==1.2.0
     # via
     #   -c requirements.txt
-    #   -r requirements.txt
     #   willow
 html5lib==1.1
     # via
     #   -c requirements.txt
-    #   -r requirements.txt
     #   wagtail
 identify==2.5.24
     # via pre-commit
-idna==3.4
+idna==3.6
     # via
     #   -c requirements.txt
-    #   -r requirements.txt
     #   requests
 importlib-metadata==6.6.0
     # via
@@ -162,7 +144,6 @@ keyring==23.13.1
 l18n==2021.3
     # via
     #   -c requirements.txt
-    #   -r requirements.txt
     #   wagtail
 markdown-it-py==2.2.0
     # via rich
@@ -185,7 +166,6 @@ nox==2023.4.22
 openpyxl==3.1.2
     # via
     #   -c requirements.txt
-    #   -r requirements.txt
     #   wagtail
 packaging==23.1
     # via
@@ -195,10 +175,9 @@ packaging==23.1
     #   pytest
 pathspec==0.11.1
     # via black
-pillow==9.5.0
+pillow==10.2.0
     # via
     #   -c requirements.txt
-    #   -r requirements.txt
     #   wagtail
     #   willowavif
 pillow-avif-plugin==1.3.1
@@ -232,10 +211,9 @@ pytest-cov==4.1.0
     # via -r requirements.dev.in
 pytest-django==4.5.2
     # via -r requirements.dev.in
-pytz==2023.3.post1
+pytz==2024.1
     # via
     #   -c requirements.txt
-    #   -r requirements.txt
     #   django-modelcluster
     #   djangorestframework
     #   l18n
@@ -246,7 +224,6 @@ readme-renderer==37.3
 requests==2.31.0
     # via
     #   -c requirements.txt
-    #   -r requirements.txt
     #   requests-toolbelt
     #   twine
     #   wagtail
@@ -261,24 +238,20 @@ secretstorage==3.3.3
 six==1.16.0
     # via
     #   -c requirements.txt
-    #   -r requirements.txt
     #   bleach
     #   html5lib
     #   l18n
 soupsieve==2.5
     # via
     #   -c requirements.txt
-    #   -r requirements.txt
     #   beautifulsoup4
 sqlparse==0.4.4
     # via
     #   -c requirements.txt
-    #   -r requirements.txt
     #   django
 telepath==0.3.1
     # via
     #   -c requirements.txt
-    #   -r requirements.txt
     #   wagtail
 tomli==2.0.1
     # via
@@ -296,19 +269,17 @@ types-pytz==2023.3.0.0
     # via django-stubs
 types-pyyaml==6.0.12.9
     # via django-stubs
-typing-extensions==4.8.0
+typing-extensions==4.9.0
     # via
     #   -c requirements.txt
-    #   -r requirements.txt
     #   asgiref
     #   black
     #   django-stubs
     #   django-stubs-ext
     #   mypy
-urllib3==2.0.7
+urllib3==2.2.0
     # via
     #   -c requirements.txt
-    #   -r requirements.txt
     #   requests
     #   twine
 virtualenv==20.23.0
@@ -318,12 +289,10 @@ virtualenv==20.23.0
 wagtail==5.0.5
     # via
     #   -c requirements.txt
-    #   -r requirements.txt
     #   wagtail-picture-tag
 webencodings==0.5.1
     # via
     #   -c requirements.txt
-    #   -r requirements.txt
     #   bleach
     #   html5lib
 wheel==0.40.0
@@ -331,7 +300,6 @@ wheel==0.40.0
 willow==1.5.1
     # via
     #   -c requirements.txt
-    #   -r requirements.txt
     #   wagtail
     #   willowavif
 willowavif==0.1.3
