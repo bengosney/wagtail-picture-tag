@@ -70,7 +70,7 @@ sqlparse==0.5.0
     # via django
 telepath==0.3.1
     # via wagtail
-typing-extensions==4.12.1
+typing-extensions==4.12.2
     # via asgiref
 urllib3==2.2.1
     # via requests
