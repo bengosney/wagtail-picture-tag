@@ -49,7 +49,7 @@ idna==3.7
     # via requests
 l18n==2021.3
     # via wagtail
-openpyxl==3.1.4
+openpyxl==3.1.5
     # via wagtail
 pillow==10.3.0
     # via wagtail
