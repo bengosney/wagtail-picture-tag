@@ -60,7 +60,7 @@ pytz==2024.2
     #   l18n
 requests==2.32.3
     # via wagtail
-six==1.16.0
+six==1.17.0
     # via
     #   html5lib
     #   l18n
