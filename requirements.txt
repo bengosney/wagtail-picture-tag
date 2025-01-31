@@ -53,7 +53,7 @@ openpyxl==3.1.5
     # via wagtail
 pillow==10.4.0
     # via wagtail
-pytz==2024.2
+pytz==2025.1
     # via
     #   django-modelcluster
     #   djangorestframework
