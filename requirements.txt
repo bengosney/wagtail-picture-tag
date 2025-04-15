@@ -8,7 +8,7 @@ anyascii==0.3.2
     # via wagtail
 asgiref==3.8.1
     # via django
-beautifulsoup4==4.11.2
+beautifulsoup4==4.13.4
     # via wagtail
 certifi==2025.1.31
     # via requests
