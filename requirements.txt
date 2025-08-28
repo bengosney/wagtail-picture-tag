@@ -64,7 +64,7 @@ six==1.17.0
     # via
     #   html5lib
     #   l18n
-soupsieve==2.7
+soupsieve==2.8
     # via beautifulsoup4
 sqlparse==0.5.3
     # via django
