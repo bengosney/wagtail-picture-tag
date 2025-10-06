@@ -25,7 +25,7 @@ django==4.2.20
     #   django-treebeard
     #   djangorestframework
     #   wagtail
-django-filter==22.1
+django-filter==25.2
     # via wagtail
 django-modelcluster==6.4
     # via wagtail
